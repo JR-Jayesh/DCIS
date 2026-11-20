@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05070f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Dynamic Career Intelligence System — B.Tech Final Year Project</title>
+  <meta name="description" content="A Final Year B.Tech Project that uses NLP, Machine Learning and GitHub Analysis to deliver AI-powered career predictions, personalised roadmaps, skill gap analysis, and curated course recommendations for engineering students.">
+  <meta property="og:title" content="Dynamic Career Intelligence System — B.Tech Project">
+  <meta property="og:description" content="Resume NLP · GitHub Analysis · ML Career Prediction · Personalised Roadmaps · Final Year B.Tech CS Project">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#05070f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+  /* ─── RESET & BASE ────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #05070f;
+    color: #f1f5f9;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  /* ─── CSS VARIABLES ──────────────────────────────────────── */
+  :root {
+    --c-bg:       #05070f;
+    --c-bg2:      #080b18;
+    --c-card:     rgba(255,255,255,0.04);
+    --c-border:   rgba(255,255,255,0.08);
+    --c-primary:  #6366f1;
+    --c-purple:   #8b5cf6;
+    --c-pink:     #ec4899;
+    --c-green:    #10b981;
+    --c-amber:    #f59e0b;
+    --c-cyan:     #06b6d4;
+    --c-text:     #f1f5f9;
+    --c-muted:    #94a3b8;
+    --c-dim:      #475569;
+    --grad:       linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    --grad-r:     linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1);
+    --grad-g:     linear-gradient(135deg, #10b981, #06b6d4);
+    --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 36px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --nav-h: 72px;
+  }
+
+  /* ─── BACKGROUND ORBS ────────────────────────────────────── */
+  .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bg-orbs span {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+    animation: orbFloat 20s ease-in-out infinite alternate;
+  }
+  .bg-orbs span:nth-child(1) { width: 700px; height: 700px; top: -200px; left: -200px; background: radial-gradient(circle, #6366f1, transparent 70%); animation-duration: 22s; }
+  .bg-orbs span:nth-child(2) { width: 500px; height: 500px; top: 40%; right: -150px; background: radial-gradient(circle, #8b5cf6, transparent 70%); animation-duration: 18s; animation-direction: alternate-reverse; }
+  .bg-orbs span:nth-child(3) { width: 400px; height: 400px; bottom: -100px; left: 30%; background: radial-gradient(circle, #ec4899, transparent 70%); animation-duration: 25s; }
+  @keyframes orbFloat {
+    0%   { transform: translate(0,0) scale(1); }
+    100% { transform: translate(60px, 80px) scale(1.15); }
+  }
+
+  /* ─── NOISE TEXTURE ─────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* ─── Z-INDEX LAYERS ─────────────────────────────────────── */
+  .container { position: relative; z-index: 2; }
+
+  /* ─── UTILITY ────────────────────────────────────────────── */
+  .wrap    { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .wrap-sm { max-width: 780px;  margin: 0 auto; padding: 0 24px; }
+  .grad-text {
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .green-text {
+    background: var(--grad-g);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass {
+    background: var(--c-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+  }
+  .section { padding: 100px 0; position: relative; z-index: 2; }
+  .section-sm { padding: 70px 0; position: relative; z-index: 2; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ─── BUTTONS ────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 28px; border-radius: 50px;
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.25s var(--ease);
+    white-space: nowrap; letter-spacing: -0.1px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 0 0 0 rgba(99,102,241,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(99,102,241,0.45), 0 0 0 0 rgba(99,102,241,0);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: var(--c-muted);
+    border: 1px solid var(--c-border);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.10); color: var(--c-text); border-color: rgba(255,255,255,0.15); }
+  .btn-lg { padding: 17px 36px; font-size: 16px; }
+  .btn-sm { padding: 10px 20px; font-size: 13px; }
+  .btn-outline {
+    background: transparent;
+    color: var(--c-primary);
+    border: 1.5px solid rgba(99,102,241,0.5);
+  }
+  .btn-outline:hover { background: rgba(99,102,241,0.12); border-color: var(--c-primary); }
+
+  /* ─── NAVBAR ─────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    transition: all 0.35s var(--ease);
+  }
+  nav.scrolled {
+    background: rgba(5, 7, 15, 0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 4px;
+    list-style: none;
+  }
+  .nav-links a {
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 500; color: var(--c-muted);
+    transition: all 0.2s;
+  }
+  .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.06); }
+  .nav-actions { display: flex; align-items: center; gap: 10px; }
+  .nav-mobile-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 8px; border-radius: 8px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--c-border);
+  }
+  .nav-mobile-toggle span { width: 22px; height: 2px; background: var(--c-muted); border-radius: 2px; transition: all 0.25s; }
+  .mobile-menu {
+    display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+    background: rgba(5,7,15,0.97); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--c-border);
+    padding: 20px 24px 28px; z-index: 99;
+    flex-direction: column; gap: 6px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    padding: 13px 16px; border-radius: 12px; font-size: 15px; font-weight: 500;
+    color: var(--c-muted); transition: all 0.2s; display: block;
+  }
+  .mobile-menu a:hover { color: var(--c-text); background: rgba(255,255,255,0.06); }
+  .mobile-menu .btn { width: 100%; justify-content: center; margin-top: 8px; }
+
+  /* ─── HERO ───────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding-top: var(--nav-h); position: relative; z-index: 2;
+  }
+  .hero-inner {
+    text-align: center; padding: 80px 0 60px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 50px; padding: 7px 18px; margin-bottom: 32px;
+    font-size: 13px; font-weight: 600; color: #a5b4fc;
+    animation: fadeSlideDown 0.7s var(--ease) forwards;
+  }
+  .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #6366f1; animation: blink 1.5s ease infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes fadeSlideDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:none; } }
+
+  .hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(42px, 7vw, 82px);
+    font-weight: 900; line-height: 1.05; letter-spacing: -2.5px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.15s var(--ease) both;
+  }
+  .hero-subtitle {
+    font-size: clamp(17px, 2.5vw, 22px);
+    color: var(--c-muted); max-width: 620px; margin: 0 auto 40px;
+    line-height: 1.65; font-weight: 400;
+    animation: fadeUp 0.8s 0.25s var(--ease) both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+
+  .hero-actions {
+    display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 64px;
+    animation: fadeUp 0.8s 0.35s var(--ease) both;
+  }
+  .hero-social-proof {
+    display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.45s var(--ease) both;
+  }
+  .social-proof-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--c-dim); font-weight: 500;
+  }
+  .social-proof-item .icon { font-size: 16px; }
+  .sp-divider { width: 1px; height: 18px; background: var(--c-border); }
+
+  /* Hero app preview */
+  .hero-preview {
+    margin-top: 80px; position: relative;
+    animation: fadeUp 1s 0.5s var(--ease) both;
+  }
+  .hero-preview-glow {
+    position: absolute; inset: -40px;
+    background: radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.2), transparent 70%);
+    pointer-events: none; z-index: -1;
+  }
+  .hero-preview-wrap {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .preview-topbar {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .preview-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .preview-dot.r { background: #ff5f57; }
+  .preview-dot.y { background: #febc2e; }
+  .preview-dot.g { background: #28c840; }
+  .preview-url {
+    flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px;
+    padding: 5px 14px; font-size: 12px; color: var(--c-dim);
+    max-width: 300px; margin: 0 auto;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .preview-body {
+    display: grid; grid-template-columns: 200px 1fr;
+    min-height: 420px;
+  }
+  .preview-sidebar {
+    background: rgba(0,0,0,0.3);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 20px 14px;
+  }
+  .preview-logo {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .preview-logo-icon { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg,#6366f1,#8b5cf6); display:flex;align-items:center;justify-content:center;font-size:13px; }
+  .preview-logo-text { font-family:'Outfit',sans-serif;font-size:13px;font-weight:700; }
+  .preview-nav-group { margin-bottom: 18px; }
+  .preview-nav-label { font-size:9px;font-weight:700;color:var(--c-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:8px; }
+  .preview-nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 8px; border-radius: 8px; margin-bottom: 3px;
+    font-size: 11px; color: var(--c-muted);
+  }
+  .preview-nav-item.active { background: rgba(99,102,241,0.18); color: #a5b4fc; }
+  .preview-nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-dim); flex-shrink: 0; }
+  .preview-nav-item.active .preview-nav-dot { background: #6366f1; }
+
+  .preview-main { padding: 24px; overflow: hidden; }
+  .preview-title { font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px; }
+  .preview-sub { font-size:11px;color:var(--c-muted);margin-bottom:20px; }
+  .preview-stat-row { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px; }
+  .preview-stat {
+    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 12px;
+  }
+  .preview-stat-val { font-family:'Outfit',sans-serif;font-size:20px;font-weight:800; }
+  .preview-stat-lbl { font-size:9px;color:var(--c-muted);margin-top:2px; }
+  .preview-cards { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+  .preview-card {
+    background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 16px;
+  }
+  .preview-card-title { font-size:11px;font-weight:700;margin-bottom:10px;color:var(--c-muted); }
+  .preview-bar-row { display:flex;align-items:center;gap:8px;margin-bottom:7px; }
+  .preview-bar-label { font-size:10px;color:var(--c-muted);min-width:70px; }
+  .preview-bar-track { flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden; }
+  .preview-bar-fill { height:100%;border-radius:10px;transition:width 1.5s var(--ease); }
+  .preview-skill-chips { display:flex;flex-wrap:wrap;gap:4px; }
+  .preview-chip { background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:3px 9px;font-size:9px;color:#a5b4fc; }
+  .preview-chip.g { background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.25);color:#6ee7b7; }
+  .preview-chip.p { background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.25);color:#c4b5fd; }
+
+  /* ─── TRUST STRIP ────────────────────────────────────────── */
+  .trust-strip {
+    border-top: 1px solid var(--c-border);
+    border-bottom: 1px solid var(--c-border);
+    background: rgba(255,255,255,0.02);
+    padding: 28px 0; position: relative; z-index: 2;
+  }
+  .trust-inner { display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap; }
+  .trust-item { display:flex;align-items:center;gap:10px;font-size:13px;color:var(--c-dim);font-weight:500; }
+  .trust-item strong { color:var(--c-text); }
+
+  /* ─── SECTION HEADER ─────────────────────────────────────── */
+  .section-header { text-align:center; margin-bottom:64px; }
+  .section-pill {
+    display:inline-block;
+    background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.28);
+    border-radius:50px;padding:6px 16px;
+    font-size:12px;font-weight:700;color:#a5b4fc;
+    text-transform:uppercase;letter-spacing:1px;
+    margin-bottom:20px;
+  }
+  .section-title {
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(32px,5vw,52px);
+    font-weight:900;line-height:1.1;letter-spacing:-1.5px;
+    margin-bottom:18px;
+  }
+  .section-desc {
+    font-size:18px;color:var(--c-muted);max-width:560px;margin:0 auto;line-height:1.7;
+  }
+
+  /* ─── FEATURES ───────────────────────────────────────────── */
+  .features-grid {
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  }
+  .feature-card {
+    background:var(--c-card);
+    border:1px solid var(--c-border);
+    border-radius:var(--r-lg);
+    padding:32px;
+    transition:all 0.3s var(--ease);
+    position:relative; overflow:hidden;
+  }
+  .feature-card::before {
+    content:''; position:absolute;inset:0;
+    background: var(--fc-grad, linear-gradient(135deg, rgba(99,102,241,0.08), transparent));
+    opacity:0; transition:opacity 0.3s;
+  }
+  .feature-card:hover { border-color:rgba(99,102,241,0.3); transform:translateY(-4px); box-shadow:0 20px 50px rgba(0,0,0,0.4); }
+  .feature-card:hover::before { opacity:1; }
+  .feature-icon {
+    width:54px;height:54px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;margin-bottom:20px;
+    flex-shrink:0;
+  }
+  .feature-title { font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;margin-bottom:10px; }
+  .feature-desc  { font-size:14px;color:var(--c-muted);line-height:1.7; }
+  .feature-tag   { display:inline-block;margin-top:16px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px; }
+
+  /* ─── METRICS STRIP ──────────────────────────────────────── */
+  .metrics { padding:80px 0;position:relative;z-index:2; }
+  .metrics-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:2px; }
+  .metric-item {
+    text-align:center;padding:40px 20px;
+    background:var(--c-card);border:1px solid var(--c-border);
+  }
+  .metric-item:first-child { border-radius:var(--r-lg) 0 0 var(--r-lg); }
+  .metric-item:last-child  { border-radius:0 var(--r-lg) var(--r-lg) 0; }
+  .metric-num {
+    font-family:'Outfit',sans-serif;font-size:clamp(36px,5vw,56px);font-weight:900;
+    line-height:1;margin-bottom:8px;
+  }
+  .metric-label { font-size:14px;color:var(--c-muted); }
+
+  /* ─── HOW IT WORKS ───────────────────────────────────────── */
+  .steps { display:flex;gap:0;position:relative; }
+  .step-connector {
+    position:absolute;top:32px;left:calc(50%/3 + 32px);
+    right:calc(50%/3 + 32px);
+    height:1px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#ec4899);
+    z-index:0;
+  }
+  .step { flex:1;text-align:center;padding:0 24px;position:relative;z-index:1; }
+  .step-num {
+    width:64px;height:64px;border-radius:50%;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Outfit',sans-serif;font-size:22px;font-weight:900;
+    margin:0 auto 24px;
+    box-shadow:0 0 0 8px rgba(99,102,241,0.15),0 8px 24px rgba(99,102,241,0.3);
+  }
+  .step-title { font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:10px; }
+  .step-desc  { font-size:14px;color:var(--c-muted);line-height:1.7; }
+
+  /* ─── FAQ ────────────────────────────────────────────────── */
+  .faq-list { display:flex;flex-direction:column;gap:12px; }
+  .faq-item {
+    background:var(--c-card);border:1px solid var(--c-border);
+    border-radius:var(--r-md);overflow:hidden;
+    transition:border-color 0.25s;
+  }
+  .faq-item.open { border-color:rgba(99,102,241,0.3); }
+  .faq-q {
+    padding:20px 24px;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    font-size:15px;font-weight:600;user-select:none;
+  }
+  .faq-icon { font-size:20px;transition:transform 0.3s;flex-shrink:0;color:var(--c-dim); }
+  .faq-item.open .faq-icon { transform:rotate(45deg);color:var(--c-primary); }
+  .faq-a { max-height:0;overflow:hidden;transition:max-height 0.4s var(--ease); }
+  .faq-a-inner { padding:0 24px 20px;font-size:14px;color:var(--c-muted);line-height:1.75; }
+  .faq-item.open .faq-a { max-height:300px; }
+
+  /* ─── CTA SECTION ────────────────────────────────────────── */
+  .cta-section {
+    margin:0 24px 80px;border-radius:var(--r-xl);
+    background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));
+    border:1px solid rgba(99,102,241,0.25);
+    padding:80px 40px;text-align:center;
+    position:relative;overflow:hidden;
+    z-index:2;
+  }
+  .cta-glow {
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:500px;height:300px;
+    background:radial-gradient(ellipse,rgba(99,102,241,0.3),transparent 70%);
+    pointer-events:none;
+  }
+  .cta-title { font-family:'Outfit',sans-serif;font-size:clamp(28px,4.5vw,48px);font-weight:900;line-height:1.15;letter-spacing:-1.5px;margin-bottom:16px;position:relative;z-index:1; }
+  .cta-sub { font-size:17px;color:var(--c-muted);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;position:relative;z-index:1; }
+  .cta-actions { display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;z-index:1; }
+  .cta-note { margin-top:20px;font-size:13px;color:var(--c-dim);position:relative;z-index:1; }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  footer {
+    border-top:1px solid var(--c-border);
+    padding:60px 0 32px;position:relative;z-index:2;
+  }
+  .footer-grid { display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px; }
+  .footer-brand { }
+  .footer-logo { display:flex;align-items:center;gap:10px;margin-bottom:16px; }
+  .footer-logo-icon { width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:16px; }
+  .footer-logo-text { font-family:'Outfit',sans-serif;font-size:20px;font-weight:800; }
+  .footer-tagline { font-size:13px;color:var(--c-muted);line-height:1.7;max-width:260px;margin-bottom:20px; }
+  .footer-badges { display:flex;gap:8px;flex-wrap:wrap; }
+  .footer-badge { background:rgba(255,255,255,0.05);border:1px solid var(--c-border);border-radius:8px;padding:5px 11px;font-size:11px;color:var(--c-dim); }
+  .footer-col-title { font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--c-muted);margin-bottom:16px; }
+  .footer-links { list-style:none;display:flex;flex-direction:column;gap:10px; }
+  .footer-links a { font-size:14px;color:var(--c-dim);transition:color 0.2s; }
+  .footer-links a:hover { color:var(--c-text); }
+  .footer-bottom { display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:28px;border-top:1px solid var(--c-border); }
+  .footer-copy { font-size:13px;color:var(--c-dim); }
+  .footer-legal { display:flex;gap:20px; }
+  .footer-legal a { font-size:13px;color:var(--c-dim);transition:color 0.2s; }
+  .footer-legal a:hover { color:var(--c-muted); }
+  .footer-socials { display:flex;gap:10px; }
+  .social-btn {
+    width:36px;height:36px;border-radius:9px;
+    background:rgba(255,255,255,0.05);border:1px solid var(--c-border);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;transition:all 0.2s;
+  }
+  .social-btn:hover { background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.3); }
+
+  /* ─── FLOATING CTA ───────────────────────────────────────── */
+  .floating-cta {
+    position:fixed;bottom:28px;right:28px;z-index:200;
+    animation:floatUp 0.5s 1.5s var(--ease) both;
+  }
+  @keyframes floatUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;} }
+  .floating-cta .btn { box-shadow:0 8px 32px rgba(99,102,241,0.5); }
+
+  /* ─── AUTH MODAL ─────────────────────────────────────────── */
+  .auth-modal[hidden] { display:none; }
+  .auth-modal { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:20px; background:rgba(0,0,0,.72); backdrop-filter:blur(10px); }
+  .auth-card { width:min(100%,430px); padding:30px; border:1px solid var(--c-border); border-radius:var(--r-lg); background:rgba(11,15,30,.98); box-shadow:0 24px 80px rgba(0,0,0,.65); position:relative; }
+  .auth-close { position:absolute; top:12px; right:14px; width:36px; height:36px; border:0; border-radius:10px; background:rgba(255,255,255,.06); color:var(--c-text); cursor:pointer; font-size:20px; }
+  .auth-title { font:800 28px/1.2 'Outfit',sans-serif; margin-bottom:6px; }
+  .auth-subtitle { color:var(--c-muted); font-size:13px; margin-bottom:22px; }
+  .auth-tabs { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:20px; padding:4px; background:rgba(255,255,255,.04); border-radius:10px; }
+  .auth-tab { border:0; border-radius:8px; padding:10px; background:transparent; color:var(--c-muted); cursor:pointer; font-weight:700; }
+  .auth-tab.active { color:var(--c-text); background:rgba(99,102,241,.22); }
+  .auth-form { display:grid; gap:13px; }
+  .auth-form [hidden] { display:none !important; }
+  .auth-form label { display:grid; gap:6px; color:var(--c-muted); font-size:12px; font-weight:600; }
+  .auth-form input { width:100%; padding:12px 13px; border:1px solid var(--c-border); border-radius:10px; background:rgba(255,255,255,.05); color:var(--c-text); outline:none; font:inherit; }
+  .auth-form input:focus { border-color:var(--c-primary); box-shadow:0 0 0 3px rgba(99,102,241,.14); }
+  .auth-submit { width:100%; border:0; cursor:pointer; }
+  .auth-status { min-height:20px; color:#fca5a5; font-size:12px; }
+  .auth-status.success { color:#6ee7b7; }
+
+  /* ─── RESPONSIVE ─────────────────────────────────────────── */
+  @media(max-width:1024px){
+    .features-grid { grid-template-columns:repeat(2,1fr); }
+  .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
+    .metrics-grid { grid-template-columns:repeat(2,1fr); }
+    .metric-item:first-child { border-radius:var(--r-lg) 0 0 0; }
+    .metric-item:nth-child(2) { border-radius:0 var(--r-lg) 0 0; }
+    .metric-item:nth-child(3) { border-radius:0 0 0 var(--r-lg); }
+    .metric-item:last-child  { border-radius:0 0 var(--r-lg) 0; }
+    .preview-body { grid-template-columns:160px 1fr; }
+    .preview-stat-row { grid-template-columns:repeat(2,1fr); }
+  }
+  @media(max-width:768px){
+    :root { --nav-h: 62px; }
+    .section { padding:70px 0; }
+    .section-header { margin-bottom:44px; }
+    .hero-inner { padding:60px 0 40px; }
+    .features-grid { grid-template-columns:1fr; }
+    .steps { flex-direction:column;gap:32px; }
+    .step-connector { display:none; }
+    .footer-grid { grid-template-columns:1fr; gap:28px; }
+    .footer-bottom { flex-direction:column;text-align:center;gap:14px; }
+    .metrics-grid { grid-template-columns:repeat(2,1fr); }
+    .hero-actions { gap:10px; }
+    .nav-links, .nav-actions .btn-ghost { display:none; }
+    .nav-mobile-toggle { display:flex; }
+    .preview-body { grid-template-columns:1fr; }
+    .preview-sidebar { display:none; }
+    .preview-stat-row { grid-template-columns:repeat(2,1fr); }
+    .cta-section { margin:0 16px 60px; padding:50px 24px; }
+    .floating-cta { display:none; }
+  }
+  @media(max-width:480px){
+    .metrics-grid { grid-template-columns:1fr 1fr; }
+    .hero-social-proof { gap:12px; }
+    .sp-divider { display:none; }
+    .trust-inner { gap:20px; justify-content:flex-start; padding:0 24px; overflow-x:auto; flex-wrap:nowrap; }
+    .section-title { letter-spacing:-1px; }
+    .preview-cards { grid-template-columns:1fr; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- Background Orbs -->
+<div class="bg-orbs" aria-hidden="true">
+  <span></span><span></span><span></span>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="landing.html" class="nav-logo">
+      <div class="nav-logo-icon">🧭</div>
+      CareerAI
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-auth-open="signin">Sign In</button>
+      <button type="button" class="btn btn-primary btn-sm" data-auth-open="signup">Get Started Free →</button>
+      <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" onclick="closeMobileMenu()">Features</a>
+  <a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a>
+  <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+  <button type="button" class="btn btn-primary" data-auth-open="signup">Get Started Free →</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════ -->
+<section class="hero container">
+  <div class="wrap hero-inner">
+    <h1 class="hero-title">
+      Dynamic Career<br>
+      <span class="grad-text">Intelligence System</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      A Final Year B.Tech project that integrates <strong style="color:#a5b4fc">NLP</strong>, <strong style="color:#c4b5fd">Machine Learning</strong> and <strong style="color:#6ee7b7">GitHub Analysis</strong> to generate intelligent, personalised career recommendations for engineering students.
+    </p>
+
+    <div class="hero-actions">
+      <button type="button" class="btn btn-primary btn-lg" data-auth-open="signup">
+        🚀 Launch Live Demo
+      </button>
+      <a href="#abstract" class="btn btn-ghost btn-lg">
+        📄 Read Abstract ↓
+      </a>
+    </div>
+
+    <div class="hero-social-proof">
+      <div class="social-proof-item"><span class="icon">🤖</span> NLP + Machine Learning</div>
+      <div class="sp-divider"></div>
+      <div class="social-proof-item"><span class="icon">🐙</span> GitHub Profile Analysis</div>
+      <div class="sp-divider"></div>
+      <div class="social-proof-item"><span class="icon">🗺️</span> AI Career Roadmaps</div>
+      <div class="sp-divider"></div>
+      <div class="social-proof-item"><span class="icon">🔒</span> Secure Firebase Authentication</div>
+    </div>
+
+    <!-- App Preview Mockup -->
+    <div class="hero-preview">
+      <div class="hero-preview-glow"></div>
+      <div class="hero-preview-wrap">
+        <div class="preview-topbar">
+          <div class="preview-dot r"></div>
+          <div class="preview-dot y"></div>
+          <div class="preview-dot g"></div>
+          <div class="preview-url">🔒 careerai.app/dashboard</div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="preview-logo">
+              <div class="preview-logo-icon">🧭</div>
+              <div class="preview-logo-text">CareerAI</div>
+            </div>
+            <div class="preview-nav-group">
+              <div class="preview-nav-label">Overview</div>
+              <div class="preview-nav-item active"><div class="preview-nav-dot"></div> Dashboard</div>
+            </div>
+            <div class="preview-nav-group">
+              <div class="preview-nav-label">AI Analysis</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> Analysis Hub</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> ML Predictor</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> AI Roadmap</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> Courses</div>
+            </div>
+            <div class="preview-nav-group">
+              <div class="preview-nav-label">Career Tools</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> Career Paths</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> Skill Gap</div>
+              <div class="preview-nav-item"><div class="preview-nav-dot"></div> Job Market</div>
+            </div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-title">Welcome back, Explorer 👋</div>
+            <div class="preview-sub">Your AI-powered career intelligence overview</div>
+            <div class="preview-stat-row">
+              <div class="preview-stat"><div class="preview-stat-val grad-text">94</div><div class="preview-stat-lbl">Career Score</div></div>
+              <div class="preview-stat"><div class="preview-stat-val" style="color:#10b981">87%</div><div class="preview-stat-lbl">ML Suitability</div></div>
+              <div class="preview-stat"><div class="preview-stat-val" style="color:#f59e0b">12</div><div class="preview-stat-lbl">Skills Gap</div></div>
+              <div class="preview-stat"><div class="preview-stat-val" style="color:#8b5cf6">42</div><div class="preview-stat-lbl">Courses Matched</div></div>
+            </div>
+            <div class="preview-cards">
+              <div class="preview-card">
+                <div class="preview-card-title">🤖 Career Match Rankings</div>
+                <div class="preview-bar-row"><div class="preview-bar-label">Software Eng.</div><div class="preview-bar-track"><div class="preview-bar-fill" style="width:87%;background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div></div></div>
+                <div class="preview-bar-row"><div class="preview-bar-label">Data Scientist</div><div class="preview-bar-track"><div class="preview-bar-fill" style="width:74%;background:linear-gradient(90deg,#8b5cf6,#ec4899)"></div></div></div>
+                <div class="preview-bar-row"><div class="preview-bar-label">ML Engineer</div><div class="preview-bar-track"><div class="preview-bar-fill" style="width:68%;background:linear-gradient(90deg,#10b981,#06b6d4)"></div></div></div>
+                <div class="preview-bar-row"><div class="preview-bar-label">Cybersecurity</div><div class="preview-bar-track"><div class="preview-bar-fill" style="width:52%;background:linear-gradient(90deg,#f59e0b,#ef4444)"></div></div></div>
+              </div>
+              <div class="preview-card">
+                <div class="preview-card-title">⚡ Extracted Skills (NLP)</div>
+                <div class="preview-skill-chips">
+                  <span class="preview-chip">Python</span>
+                  <span class="preview-chip p">React</span>
+                  <span class="preview-chip g">AWS</span>
+                  <span class="preview-chip">Docker</span>
+                  <span class="preview-chip p">TensorFlow</span>
+                  <span class="preview-chip g">SQL</span>
+                  <span class="preview-chip">TypeScript</span>
+                  <span class="preview-chip p">Kubernetes</span>
+                  <span class="preview-chip g">Node.js</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     TRUST STRIP
+════════════════════════════════════════════════════════ -->
+<div class="trust-strip container">
+  <div class="trust-inner wrap">
+    <div class="trust-item">🎓 <strong>B.Tech Final Year</strong> Project</div>
+    <div class="trust-item">🏛️ <strong>Computer Science</strong> &amp; Engineering</div>
+    <div class="trust-item">🤖 <strong>NLP + ML</strong> Algorithms</div>
+    <div class="trust-item">📄 <strong>PDF / Image</strong> Resume Parsing</div>
+    <div class="trust-item">🗺️ <strong>5 Career Domains</strong> Modelled</div>
+    <div class="trust-item">⚡ <strong>75+ Skills</strong> Detected by NLP</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     FEATURES
+════════════════════════════════════════════════════════ -->
+<section class="section container" id="features">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">Features</div>
+      <h2 class="section-title">Everything you need to<br><span class="grad-text">own your career</span></h2>
+      <p class="section-desc">Six powerful AI modules working together to give you the most complete career intelligence available.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1" style="--fc-grad:linear-gradient(135deg,rgba(99,102,241,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(99,102,241,0.15)">📄</div>
+        <div class="feature-title">Resume NLP Analysis</div>
+        <div class="feature-desc">Our natural language processing engine parses your resume to extract 75+ skills, detect experience levels, education, certifications, and project patterns — in seconds.</div>
+        <span class="feature-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">NLP Engine</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-2" style="--fc-grad:linear-gradient(135deg,rgba(16,185,129,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.15)">🐙</div>
+        <div class="feature-title">GitHub Profile Scoring</div>
+        <div class="feature-desc">Automatically analyse your GitHub repositories, language distribution, contribution heatmap, project complexity, and community signals to build a verified skill profile.</div>
+        <span class="feature-tag" style="background:rgba(16,185,129,0.15);color:#6ee7b7">Code Analysis</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-3" style="--fc-grad:linear-gradient(135deg,rgba(139,92,246,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.15)">🤖</div>
+        <div class="feature-title">ML Career Predictor</div>
+        <div class="feature-desc">Our career scoring engine evaluates your profile across major engineering disciplines, predicts your ideal role with confidence levels, salary range, and a radar chart of career readiness dimensions.</div>
+        <span class="feature-tag" style="background:rgba(139,92,246,0.15);color:#c4b5fd">Machine Learning</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-1" style="--fc-grad:linear-gradient(135deg,rgba(245,158,11,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.15)">🗺️</div>
+        <div class="feature-title">Personalised Roadmap</div>
+        <div class="feature-desc">Get a phase-by-phase career roadmap — from Foundation to Expert — with specific skills to learn, projects to build, certifications to earn, and milestones to hit. Track progress with checkboxes.</div>
+        <span class="feature-tag" style="background:rgba(245,158,11,0.15);color:#fcd34d">Roadmap AI</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-2" style="--fc-grad:linear-gradient(135deg,rgba(236,72,153,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(236,72,153,0.15)">🎓</div>
+        <div class="feature-title">Smart Course Recommender</div>
+        <div class="feature-desc">Receive priority-ranked course recommendations from Coursera, Udemy, Google, Kaggle and more — each one mapped directly to your specific skill gaps and target career domain.</div>
+        <span class="feature-tag" style="background:rgba(236,72,153,0.15);color:#f9a8d4">Course AI</span>
+      </div>
+      <div class="feature-card reveal reveal-delay-3" style="--fc-grad:linear-gradient(135deg,rgba(6,182,212,0.12),transparent)">
+        <div class="feature-icon" style="background:rgba(6,182,212,0.15)">💹</div>
+        <div class="feature-title">Live Job Market Intel</div>
+        <div class="feature-desc">Monitor 2025 salary benchmarks, job growth trends by role, in-demand skills heat maps, and hiring volume charts across Software Engineering, Data Science, Cybersecurity, UX, and Product.</div>
+        <span class="feature-tag" style="background:rgba(6,182,212,0.15);color:#67e8f9">Market Data</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     METRICS
+════════════════════════════════════════════════════════ -->
+<div class="metrics container">
+  <div class="wrap">
+    <div class="metrics-grid">
+      <div class="metric-item glass reveal">
+        <div class="metric-num grad-text">75+</div>
+        <div class="metric-label">Skills detected by NLP</div>
+      </div>
+      <div class="metric-item glass reveal reveal-delay-1">
+        <div class="metric-num green-text">33</div>
+        <div class="metric-label">Career domains modelled</div>
+      </div>
+      <div class="metric-item glass reveal reveal-delay-2">
+        <div class="metric-num" style="background:linear-gradient(135deg,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">40+</div>
+        <div class="metric-label">Curated courses per profile</div>
+      </div>
+      <div class="metric-item glass reveal reveal-delay-3">
+        <div class="metric-num" style="background:linear-gradient(135deg,#8b5cf6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">30s</div>
+        <div class="metric-label">Time to full analysis</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════ -->
+<section class="section container" id="how-it-works">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">How It Works</div>
+      <h2 class="section-title">Three steps to your<br><span class="grad-text">career breakthrough</span></h2>
+      <p class="section-desc">No complex setup. No data sent to servers. Everything runs in your browser for complete privacy.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step-connector"></div>
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3 class="step-title">Upload Your Profile</h3>
+        <p class="step-desc">Drop your resume (PDF, TXT, DOC, or image) and enter your GitHub username. Our AI instantly begins extracting your skills, experience, and coding patterns.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <h3 class="step-title">AI Analyses Everything</h3>
+        <p class="step-desc">NLP parses your resume while our career engine scores your profile across major engineering domains. It cross-references GitHub signals with 75+ skill patterns to build your complete intelligence report.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">3</div>
+        <h3 class="step-title">Get Your Career Plan</h3>
+        <p class="step-desc">Receive your ML-predicted career match with salary range, a phase-by-phase learning roadmap, gap analysis, and 40+ curated courses — all personalised to your unique profile.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     FAQ
+════════════════════════════════════════════════════════ -->
+<section class="section-sm container" id="faq">
+  <div class="wrap-sm">
+    <div class="section-header reveal">
+      <div class="section-pill">FAQ</div>
+      <h2 class="section-title">Common <span class="grad-text">questions</span></h2>
+    </div>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          Is my resume data stored or sent to a server?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">No. CareerAI runs entirely in your browser. Your resume text, GitHub data, and profile information never leave your device. All NLP parsing and ML prediction happens client-side using JavaScript — your data is 100% private.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          How accurate is the ML career prediction?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">The career scoring engine analyses your skill profile across major engineering disciplines. The more data you provide (resume + GitHub), the more useful the directional guidance becomes. It is designed as an informed second opinion from an AI career counsellor, not a deterministic oracle.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          What file formats does resume analysis support?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">CareerAI supports TXT and Markdown (instant text extraction), PDF (real text extraction via PDF.js), PNG/JPG (image preview with OCR simulation), and PPT/PPTX (with guided conversion instructions). For best results, use PDF or TXT format.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          Do I need a GitHub account to use CareerAI?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">No, GitHub is optional. You can run a complete AI analysis with just your resume and profile form. However, adding your GitHub username significantly improves the accuracy of skill detection and career match predictions by providing verified coding evidence.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          Can I use CareerAI on mobile?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. CareerAI is fully responsive. On mobile you'll see a bottom tab bar for quick navigation, a swipe-open sidebar for full navigation, and a touch-optimised interface. The full AI analysis runs on mobile just as well as desktop.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)">
+          How does the roadmap update over time?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Your roadmap is saved locally in your browser. As you check off skills you've learned, the progress bar updates automatically. You can also regenerate the roadmap for a different career domain at any time using the domain selector buttons.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     PROJECT ABSTRACT
+════════════════════════════════════════════════════════ -->
+<section class="section container" id="abstract">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">Project Abstract</div>
+      <h2 class="section-title">What is <span class="grad-text">this project?</span></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start" class="reveal">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px;border-left:3px solid #6366f1">
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a5b4fc;margin-bottom:16px">📋 Abstract</div>
+        <p style="font-size:15px;color:#94a3b8;line-height:1.85;margin-bottom:16px">The <strong style="color:#f0f4ff">Dynamic Career Intelligence System</strong> is a final year B.Tech project that addresses the challenge of career decision-making for engineering graduates using Artificial Intelligence.</p>
+        <p style="font-size:15px;color:#94a3b8;line-height:1.85;margin-bottom:16px">The system integrates <strong style="color:#a5b4fc">Natural Language Processing (NLP)</strong> for resume skill extraction, <strong style="color:#c4b5fd">Machine Learning algorithms</strong> for career suitability prediction, and <strong style="color:#6ee7b7">GitHub API analysis</strong> for verifying real-world coding skills.</p>
+        <p style="font-size:15px;color:#94a3b8;line-height:1.85">The result is a personalised, intelligent career intelligence dashboard — with skill gap analysis, phase-by-phase roadmaps, course recommendations, and live job market insights — all running entirely in the browser.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.22);border-radius:14px;padding:20px">
+          <div style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:8px">🎯 Problem Statement</div>
+          <p style="font-size:13.5px;color:#94a3b8;line-height:1.7">Engineering graduates often lack structured guidance on which career path suits their skill set, leading to misaligned career decisions. This system solves that with data-driven AI analysis.</p>
+        </div>
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.22);border-radius:14px;padding:20px">
+          <div style="font-size:13px;font-weight:700;color:#6ee7b7;margin-bottom:8px">✅ Proposed Solution</div>
+          <p style="font-size:13.5px;color:#94a3b8;line-height:1.7">An intelligent, multi-module web application that processes resume data and GitHub activity through NLP and ML pipelines to generate accurate, personalised career recommendations in real-time.</p>
+        </div>
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.22);border-radius:14px;padding:20px">
+          <div style="font-size:13px;font-weight:700;color:#fcd34d;margin-bottom:8px">📐 Scope</div>
+          <p style="font-size:13.5px;color:#94a3b8;line-height:1.7">33 engineering and technology domains modelled across civil, mechanical, electrical, electronics, chemical, aerospace, biomedical, data, software, security, product, design, and emerging fields; 75+ skills extracted by NLP; and 40+ curated course recommendations per profile.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     TECHNOLOGY STACK
+════════════════════════════════════════════════════════ -->
+<section class="section-sm container" id="tech-stack">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">Technology Stack</div>
+      <h2 class="section-title">Built with <span class="grad-text">modern technologies</span></h2>
+      <p class="section-desc">Every technology was chosen to deliver a fast, private, and intelligent experience — with no backend required.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px" class="reveal">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px;text-align:center;transition:all 0.25s" onmouseover="this.style.borderColor='rgba(99,102,241,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:12px">🧠</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Natural Language Processing</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">Keyword extraction, entity recognition, skill matching, semantic pattern analysis on resume text</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center">
+          <span style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#a5b4fc">Tokenisation</span>
+          <span style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#a5b4fc">TF-IDF</span>
+          <span style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#a5b4fc">Regex NER</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px;text-align:center;transition:all 0.25s" onmouseover="this.style.borderColor='rgba(139,92,246,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:12px">🤖</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Machine Learning</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">Career suitability scoring, multi-domain classification, weighted feature analysis and confidence scoring</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center">
+          <span style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#c4b5fd">Scoring Model</span>
+          <span style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#c4b5fd">Classifier</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px;text-align:center;transition:all 0.25s" onmouseover="this.style.borderColor='rgba(16,185,129,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:12px">🐙</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">GitHub API Analysis</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">Repository scanning, language distribution, contribution heatmap, activity scoring and project complexity</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center">
+          <span style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#6ee7b7">REST API</span>
+          <span style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#6ee7b7">Heatmap</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px;text-align:center;transition:all 0.25s" onmouseover="this.style.borderColor='rgba(245,158,11,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="font-size:36px;margin-bottom:12px">📄</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px">Multi-format Resume Parser</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">PDF.js for text extraction, OCR simulation for images, drag-and-drop interface supporting 7 file types</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center">
+          <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#fcd34d">PDF.js</span>
+          <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#fcd34d">OCR</span>
+          <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:2px 9px;font-size:10px;color:#fcd34d">Drag &amp; Drop</span>
+        </div>
+      </div>
+    </div>
+    <!-- Second row: frontend tech -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px" class="reveal reveal-delay-2">
+      <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px;flex-shrink:0">⚡</div>
+        <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Vanilla JavaScript</div><div style="font-size:11.5px;color:#94a3b8">ES6+ modules, Intersection Observer, async/await, FileReader API</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px;flex-shrink:0">📊</div>
+        <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Chart.js v4</div><div style="font-size:11.5px;color:#94a3b8">Radar charts, bar charts, doughnut — career & market visualisation</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px;flex-shrink:0">🎨</div>
+        <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">CSS3 + Glassmorphism</div><div style="font-size:11.5px;color:#94a3b8">Custom properties, backdrop-filter, grid, responsive breakpoints</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:18px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px;flex-shrink:0">🔒</div>
+        <div><div style="font-size:13px;font-weight:700;margin-bottom:3px">Secure cloud-ready platform</div><div style="font-size:11.5px;color:#94a3b8">Firebase Authentication and Realtime Database store your profile securely across devices</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     SYSTEM ARCHITECTURE
+════════════════════════════════════════════════════════ -->
+<section class="section-sm container" id="architecture">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">System Architecture</div>
+      <h2 class="section-title">How the <span class="grad-text">AI pipeline works</span></h2>
+      <p class="section-desc">A modular, layered architecture processes your data through multiple intelligent engines to produce comprehensive career insights.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:24px;padding:36px;overflow-x:auto" class="reveal">
+      <!-- Architecture flow diagram -->
+      <div style="display:flex;align-items:center;gap:0;min-width:700px;flex-wrap:nowrap">
+        <!-- Input Layer -->
+        <div style="flex:1;text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6366f1;margin-bottom:12px">Input Layer</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#a5b4fc">📄 Resume File</div>
+            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#a5b4fc">🐙 GitHub Profile</div>
+            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#a5b4fc">👤 Academic Form</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="color:rgba(99,102,241,0.5);font-size:22px;padding:0 8px;flex-shrink:0">→</div>
+        <!-- Processing Layer -->
+        <div style="flex:1.2;text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8b5cf6;margin-bottom:12px">Processing Layer</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#c4b5fd">🧠 NLP Engine (ai-engine.js)</div>
+            <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#c4b5fd">🤖 ML Predictor (ai-engine.js)</div>
+            <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#c4b5fd">📊 GitHub Analyser</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="color:rgba(139,92,246,0.5);font-size:22px;padding:0 8px;flex-shrink:0">→</div>
+        <!-- Knowledge Base -->
+        <div style="flex:1;text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#10b981;margin-bottom:12px">Knowledge Base</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#6ee7b7">🗃️ ai-data.js (Skill DB)</div>
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#6ee7b7">📚 data.js (Career DB)</div>
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#6ee7b7">💹 Market Data Store</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="color:rgba(16,185,129,0.5);font-size:22px;padding:0 8px;flex-shrink:0">→</div>
+        <!-- Output Layer -->
+        <div style="flex:1.2;text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#f59e0b;margin-bottom:12px">Output Layer</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#fcd34d">🎯 Career Predictions</div>
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#fcd34d">🗺️ Personalised Roadmap</div>
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;color:#fcd34d">📈 Skill Gap + Courses</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     PROJECT TEAM
+════════════════════════════════════════════════════════ -->
+<section class="section-sm container" id="team">
+  <div class="wrap">
+    <div class="section-header reveal">
+      <div class="section-pill">Project Team</div>
+      <h2 class="section-title">Meet the <span class="grad-text">developers</span></h2>
+      <p class="section-desc">Final year B.Tech students — Department of Computer Science &amp; Engineering, Academic Year 2024–25.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;margin:0 auto" class="reveal">
+      <!-- Team Member 1 -->
+      <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:center;transition:all 0.3s" onmouseover="this.style.borderColor='rgba(99,102,241,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(99,102,241,0.35)">👨‍💻</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:4px;font-family:'Outfit',sans-serif">Student Name</div>
+        <div style="font-size:12px;color:#a5b4fc;font-weight:600;margin-bottom:8px">Team Lead · NLP &amp; ML Module</div>
+        <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">Designed and implemented the NLP resume parser, ML career predictor, and GitHub analysis engine.</div>
+        <div style="margin-top:14px;font-size:11px;color:#475569">Roll No: XXXX · CSE</div>
+      </div>
+      <!-- Team Member 2 -->
+      <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:center;transition:all 0.3s" onmouseover="this.style.borderColor='rgba(139,92,246,0.35)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none'">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(139,92,246,0.35)">👩‍💻</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:4px;font-family:'Outfit',sans-serif">Student Name</div>
+        <div style="font-size:12px;color:#c4b5fd;font-weight:600;margin-bottom:8px">Frontend · UI/UX &amp; Dashboard</div>
+        <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">Built the professional dashboard UI, responsive design system, landing page, and data visualisation components.</div>
+        <div style="margin-top:14px;font-size:11px;color:#475569">Roll No: XXXX · CSE</div>
+      </div>
+      <!-- Guide -->
+      <div style="background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;text-align:center;transition:all 0.3s;border-top:2px solid rgba(245,158,11,0.5)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(245,158,11,0.35)">🎓</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:4px;font-family:'Outfit',sans-serif">Prof. Guide Name</div>
+        <div style="font-size:12px;color:#fcd34d;font-weight:600;margin-bottom:8px">Project Guide · Supervisor</div>
+        <div style="font-size:11.5px;color:#94a3b8;line-height:1.6">Department of Computer Science &amp; Engineering. Guided the system design, algorithm selection, and project methodology.</div>
+        <div style="margin-top:14px;font-size:11px;color:#475569">Dept. of CSE · Faculty</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;max-width:600px;margin-left:auto;margin-right:auto" class="reveal">
+      <div style="font-size:13px;color:#94a3b8;line-height:1.7">🏛️ <strong style="color:#f0f4ff">Department of Computer Science &amp; Engineering</strong><br>B.Tech Final Year Project · Academic Year 2024–25<br>Topic: <em style="color:#a5b4fc">Dynamic Career Intelligence System using NLP and Machine Learning</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     CTA
+════════════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="cta-section reveal">
+    <div class="cta-glow"></div>
+    <h2 class="cta-title">Experience the live<br><span class="grad-text">project demo</span></h2>
+    <p class="cta-sub">See the Dynamic Career Intelligence System in action — upload a resume, analyse your GitHub, and watch the AI predict your ideal career path in under 30 seconds.</p>
+    <div class="cta-actions">
+      <a href="app.html" class="btn btn-primary btn-lg">🚀 Launch CareerAI — Free Forever</a>
+      <a href="#features" class="btn btn-ghost btn-lg">Explore Features ↑</a>
+    </div>
+    <div class="cta-note">✅ 100% free for everyone &nbsp;·&nbsp; 🔒 100% private — runs in your browser &nbsp;·&nbsp; ⚡ 30-second analysis</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════ -->
+<footer class="container">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">🧭</div>
+          <div class="footer-logo-text">CareerAI</div>
+        </div>
+        <p class="footer-tagline">A Final Year B.Tech project in Computer Science &amp; Engineering — powered by NLP, Machine Learning and GitHub Analysis to deliver intelligent career guidance.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">🎓 B.Tech Final Year</span>
+          <span class="footer-badge">🤖 NLP + ML</span>
+          <span class="footer-badge">⚡ Client-side AI</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">System Modules</div>
+        <ul class="footer-links">
+          <li><a href="app.html">Dashboard Overview</a></li>
+          <li><a href="app.html">AI Analysis Hub</a></li>
+          <li><a href="app.html">ML Career Predictor</a></li>
+          <li><a href="app.html">AI Career Roadmap</a></li>
+          <li><a href="app.html">Course Recommender</a></li>
+          <li><a href="app.html">Job Market Intelligence</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Project Info</div>
+        <ul class="footer-links">
+          <li><a href="#abstract">Project Abstract</a></li>
+          <li><a href="#tech-stack">Technology Stack</a></li>
+          <li><a href="#how-it-works">System Workflow</a></li>
+          <li><a href="#features">Modules &amp; Features</a></li>
+          <li><a href="#team">Project Team</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© Dynamic Career Intelligence System </div>
+      <div class="footer-socials">
+        <a href="#" class="social-btn" title="GitHub Repository">⌥</a>
+        <a href="#" class="social-btn" title="LinkedIn">in</a>
+        <a href="#" class="social-btn" title="Project Report">📄</a>
+      </div>
+      <div class="footer-legal">
+        <a href="#abstract">Abstract</a>
+        <a href="#team">Team</a>
+        <a href="app.html">Live Demo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating CTA -->
+<div class="floating-cta">
+  <button type="button" class="btn btn-primary" data-auth-open="signin">🚀 Launch App →</button>
+</div>
+
+<!-- Toast -->
+<div id="landing-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(11,15,30,0.95);border:1px solid rgba(255,255,255,0.12);border-radius:50px;padding:12px 24px;font-size:14px;font-weight:600;color:#f1f5f9;z-index:999;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);backdrop-filter:blur(16px);white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.5)"></div>
+
+<div class="auth-modal" id="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-title">
+  <div class="auth-card">
+    <button type="button" class="auth-close" data-auth-close aria-label="Close">×</button>
+    <div class="auth-title" id="auth-title">Welcome back</div>
+    <div class="auth-subtitle" id="auth-subtitle">Sign in to continue your career journey.</div>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" data-auth-tab="signin">Sign In</button>
+      <button type="button" class="auth-tab" data-auth-tab="signup">Create Account</button>
+    </div>
+    <form class="auth-form" id="auth-form">
+      <label id="name-field" hidden>Full name<input id="auth-name" autocomplete="name"></label>
+      <label>Email<input id="auth-email" type="email" autocomplete="email" required></label>
+      <label>Password<input id="auth-password" type="password" minlength="6" autocomplete="current-password" required></label>
+      <div class="auth-status" id="auth-status" role="status"></div>
+      <button class="btn btn-primary auth-submit" id="auth-submit" type="submit">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script type="module" src="firebase-auth.js"></script>
+<script>
+// ── Navbar scroll effect ──────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Mobile menu ───────────────────────────────────────────────
+const navToggle   = document.getElementById('nav-toggle');
+const mobileMenu  = document.getElementById('mobile-menu');
+navToggle.addEventListener('click', () => {
+  const open = mobileMenu.classList.toggle('open');
+  navToggle.classList.toggle('open', open);
+});
+function closeMobileMenu() { mobileMenu.classList.remove('open'); navToggle.classList.remove('open'); }
+document.querySelectorAll('.mobile-menu a[href^="#"]').forEach(a => a.addEventListener('click', closeMobileMenu));
+
+// ── Scroll reveal (Intersection Observer) ─────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── FAQ accordion ─────────────────────────────────────────────
+function toggleFAQ(el) {
+  const item = el.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── Animate preview bars on hero in view ─────────────────────
+const heroObs = new IntersectionObserver(([e]) => {
+  if (e.isIntersecting) {
+    document.querySelectorAll('.preview-bar-fill').forEach(el => { el.style.width = el.style.width; });
+  }
+}, { threshold: 0.3 });
+const previewEl = document.querySelector('.hero-preview');
+if (previewEl) heroObs.observe(previewEl);
+
+// ── Smooth scroll for anchor links ───────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+// ── Toast ─────────────────────────────────────────────────────
+function showToastMsg(msg) {
+  const t = document.getElementById('landing-toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(80px)'; }, 3500);
+}
+
+// ── Metric counter animation ─────────────────────────────────
+const metricObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = el.dataset.target;
+    if (!target) return;
+    let start = 0;
+    const suffix = el.dataset.suffix || '';
+    const duration = 1400;
+    const step = (timestamp, startTime) => {
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const val = Math.round(progress * parseFloat(target));
+      el.textContent = val + suffix;
+      if (progress < 1) requestAnimationFrame(ts => step(ts, startTime));
+    };
+    requestAnimationFrame(ts => step(ts, ts));
+    metricObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.metric-num[data-target]').forEach(el => metricObs.observe(el));
+</script>
+</body>
+</html>

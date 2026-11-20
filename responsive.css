@@ -1,0 +1,483 @@
+/* ============================================================
+   RESPONSIVE DESIGN — Mobile · Tablet · Laptop · Desktop
+   Breakpoints:
+     xs:  ≤ 480px   (phones portrait)
+     sm:  ≤ 768px   (phones landscape / small tablets)
+     md:  ≤ 1024px  (tablets / laptop)
+     lg:  ≤ 1280px  (small desktop / large laptop)
+     xl:  > 1280px  (full desktop — default base)
+   ============================================================ */
+
+/* ── Viewport Meta Touch Handling ────────────────────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+input, button, select, textarea { touch-action: manipulation; }
+
+/* Fixed navigation sits outside the flex flow; allow the content column
+   to shrink instead of expanding to fit long generated labels. */
+.main-content,
+.section-content { min-width: 0; }
+
+/* ============================================================
+   BOTTOM MOBILE NAV  (mobile-only persistent tab bar)
+   ============================================================ */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(5, 7, 15, 0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.mob-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  min-width: 52px;
+  flex: 1;
+}
+
+.mob-nav-item.active .mob-nav-icon {
+  background: rgba(99,102,241,0.25);
+  border-color: rgba(99,102,241,0.5);
+}
+
+.mob-nav-icon {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.2s ease;
+}
+
+.mob-nav-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.mob-nav-item.active .mob-nav-label { color: var(--text-accent); }
+
+/* ── Mobile Sidebar Overlay ──────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 99;
+}
+
+/* ============================================================
+   LARGE DESKTOP  > 1280px — Widen sidebar, expand grids
+   ============================================================ */
+@media (min-width: 1281px) {
+  :root { --sidebar-width: 260px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .prediction-hero { grid-template-columns: 300px 1fr; }
+  .repo-cards-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ============================================================
+   LAPTOP  1025px – 1280px
+   ============================================================ */
+@media (max-width: 1280px) {
+  :root { --sidebar-width: 230px; }
+  .prediction-hero { grid-template-columns: 260px 1fr; }
+  .phase-sections { grid-template-columns: 1fr 1fr; }
+  .repo-cards-grid { grid-template-columns: repeat(3, 1fr); }
+  .nlp-results-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 1100px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .market-grid { grid-template-columns: 1fr; }
+  .nlp-results-grid { grid-template-columns: 1fr; }
+  .repo-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .phase-sections { grid-template-columns: 1fr 1fr; }
+  .prediction-hero { grid-template-columns: 1fr; }
+  .suitability-ring-card { flex-direction: row; gap: 24px; padding: 20px; }
+}
+
+/* ============================================================
+   TABLET  769px – 1024px
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root { --sidebar-width: 220px; }
+
+  .section-content { padding: 24px 20px; }
+
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+
+  .course-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .repo-cards-grid   { grid-template-columns: repeat(2, 1fr); }
+  .phase-sections    { grid-template-columns: 1fr 1fr; }
+
+  .topbar-search { max-width: 200px; }
+
+  .career-tree-container { overflow-x: auto; }
+
+  .wizard-step-label { font-size: 10px; }
+}
+
+/* ============================================================
+   MOBILE LARGE  577px – 768px  (phones landscape + small tablet)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Sidebar becomes slide-out drawer */
+  :root { --sidebar-width: 0px; }
+
+  .sidebar {
+    width: 260px;
+    transform: translateX(-260px);
+    box-shadow: none;
+    z-index: 150;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 40px rgba(0,0,0,0.7);
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  .main-content.shifted {
+    transform: translateX(260px);
+  }
+
+  .sidebar-overlay { display: block; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+  .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .menu-toggle  { display: flex !important; }
+
+  /* Bottom nav visible */
+  .mobile-bottom-nav { display: flex; }
+
+  /* Give main content breathing room above bottom nav */
+  .main-content { padding-bottom: 80px; }
+
+  /* Section */
+  .section-content { padding: 16px 14px 24px; }
+
+  /* Topbar */
+  .topbar { padding: 12px 16px; gap: 10px; }
+  .topbar-search { display: none; }
+  .topbar-title  { font-size: 14px; }
+
+  /* Section headings */
+  .section-title { font-size: 24px !important; }
+  .section-subtitle { font-size: 13px; }
+
+  /* Grids */
+  .grid-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+
+  /* Stat cards */
+  .stat-card { padding: 16px; }
+  .stat-value { font-size: 28px !important; }
+  .stat-icon  { width: 40px; height: 40px; font-size: 18px; }
+
+  /* Glass cards */
+  .glass-card { padding: 16px; }
+
+  /* Charts */
+  .chart-container { height: 220px !important; }
+
+  /* Score ring */
+  .score-ring-container { flex-direction: column; align-items: center; }
+  .score-ring-wrap { width: 160px; height: 160px; }
+
+  /* Career paths */
+  .path-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 8px; }
+  .path-tab  { white-space: nowrap; flex-shrink: 0; }
+  .career-tree-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Skill gap */
+  .gap-controls { grid-template-columns: 1fr; gap: 12px; }
+  .gap-overview { grid-template-columns: 1fr; }
+  .gap-results  { gap: 16px; }
+  .gap-skill-bars { padding: 14px; }
+
+  /* Timeline */
+  .timeline-controls { flex-wrap: wrap; gap: 8px; }
+  .timeline-item { padding: 14px; }
+
+  /* Quiz */
+  .quiz-options { grid-template-columns: 1fr; gap: 10px; }
+  .quiz-container .glass-card { padding: 20px; }
+
+  /* AI Wizard */
+  .wizard-steps { gap: 0; overflow-x: auto; padding-bottom: 4px; }
+  .wizard-dot { width: 36px; height: 36px; font-size: 16px; }
+  .wizard-step::after { top: 18px; }
+  .wizard-step-label { display: none; }
+
+  /* NLP results */
+  .nlp-results-grid { grid-template-columns: 1fr; gap: 12px; }
+  .skill-entity-chips { gap: 5px; }
+
+  /* GitHub */
+  .github-profile-header { flex-direction: column; gap: 14px; align-items: flex-start; }
+  .github-stats { gap: 12px; }
+  .repo-cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .heatmap-grid { overflow-x: auto; }
+  .heatmap-cell { width: 8px; height: 8px; }
+
+  /* ML Predictor */
+  .prediction-hero   { grid-template-columns: 1fr; gap: 14px; }
+  .suitability-ring-card { padding: 20px; }
+  .suitability-ring-wrap { width: 150px; height: 150px; }
+  .suit-score-num { font-size: 42px; }
+  .radar-chart-container { height: 260px; }
+  .match-header { flex-wrap: wrap; gap: 10px; }
+  .career-match-card { padding: 16px; }
+
+  /* Roadmap */
+  .roadmap-domain-selector { gap: 6px; }
+  .roadmap-domain-selector .btn-secondary { padding: 8px 12px; font-size: 12px; }
+  .phase-sections { grid-template-columns: 1fr; gap: 10px; }
+  .phase-card { padding: 14px; }
+  .roadmap-phase { gap: 12px; }
+  .phase-dot { width: 42px; height: 42px; font-size: 18px; }
+
+  /* Courses */
+  .course-cards-grid { grid-template-columns: 1fr; }
+  .course-filters { gap: 6px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .filter-chip { flex-shrink: 0; white-space: nowrap; }
+
+  /* Forms */
+  .form-input, .form-select { font-size: 16px; /* prevent iOS zoom */ }
+
+  /* Drop zone */
+  .drop-zone { padding: 28px 16px; }
+  .drop-zone-format-pills { gap: 4px; }
+  .format-pill { padding: 3px 9px; font-size: 10px; }
+
+  /* Resume textarea */
+  .resume-textarea { min-height: 160px; font-size: 14px; }
+
+  /* Buttons */
+  .btn-primary, .btn-secondary { padding: 10px 18px; font-size: 13px; }
+  .btn-lg { padding: 12px 22px !important; font-size: 14px !important; }
+
+  /* Tips */
+  .tips-scroll { display: flex; flex-direction: column; gap: 10px; }
+
+  /* Modal */
+  .modal { width: calc(100vw - 32px); max-height: 90vh; overflow-y: auto; padding: 20px; }
+  .modal-form .grid-2 { grid-template-columns: 1fr; }
+
+  /* Keep the mobile header usable when the viewport is narrow. */
+  .topbar-left { flex: 1 1 auto; min-width: 0; }
+  .topbar-actions { flex: 0 1 auto; min-width: 0; }
+  .topbar-actions > div[style*="AI Ready"] { display: none !important; }
+  .topbar-icon-btn, .menu-toggle { min-width: 44px; min-height: 44px; }
+  .topbar-title { max-width: min(48vw, 220px); }
+
+  /* Prevent long labels, URLs, and generated content from widening the page. */
+  .section-content, .glass-card, .modal, .topbar { min-width: 0; }
+  .section-content *, .glass-card *, .modal * { max-width: 100%; }
+  .table-responsive, .heatmap-grid, .career-tree-container { -webkit-overflow-scrolling: touch; }
+  pre, code, .repo-url, .course-card-name, .phase-desc { overflow-wrap: anywhere; }
+
+  /* Mobile browsers need comfortable controls and a stable tap target. */
+  button, .btn-primary, .btn-secondary, .nav-item, .mob-nav-item { min-height: 44px; }
+}
+
+/* ============================================================
+   MOBILE SMALL  ≤ 480px  (phones portrait, standard)
+   ============================================================ */
+@media (max-width: 480px) {
+  body::before { display: none; } /* reduce GPU pressure */
+
+  /* Even tighter padding */
+  .section-content { padding: 12px 10px 20px; }
+  .topbar          { padding: 10px 12px; }
+  .glass-card      { padding: 14px; border-radius: var(--radius-md); }
+
+  /* Typography */
+  .section-title { font-size: 20px !important; }
+  .section-subtitle { font-size: 12px; }
+
+  /* Grid */
+  .grid-4 { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* Stat cards compact */
+  .stat-card  { padding: 14px 12px; }
+  .stat-value { font-size: 24px !important; }
+  .stat-icon  { width: 34px; height: 34px; font-size: 15px; }
+  .stat-label { font-size: 11px; }
+  .stat-change { font-size: 10px; }
+
+  /* Sidebar drawer */
+  .sidebar { width: 240px; transform: translateX(-240px); }
+
+  /* Career path tabs */
+  .path-tab { padding: 8px 12px; font-size: 12px; }
+
+  /* Nav item text */
+  .nav-text { font-size: 13px; }
+  .sidebar-logo { padding: 20px 16px; }
+  .logo-text { font-size: 14px; }
+  .logo-sub  { font-size: 10px; }
+
+  /* Charts smaller on tiny screens */
+  .chart-container { height: 180px !important; }
+
+  /* Radar chart */
+  .radar-chart-container { height: 220px; }
+
+  /* Score ring */
+  .score-ring-wrap { width: 140px; height: 140px; }
+  .score-number    { font-size: 38px !important; }
+
+  /* Wizard */
+  .wizard-nav { flex-direction: column-reverse; gap: 8px; }
+  .wizard-nav .btn-primary, .wizard-nav .btn-secondary { width: 100%; text-align: center; }
+
+  /* Drop zone */
+  .drop-zone-icon { font-size: 36px; margin-bottom: 8px; }
+  .drop-zone-title { font-size: 15px; }
+  .drop-zone-format-pills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 10px; }
+  .format-pill { text-align: center; padding: 3px 4px; font-size: 9px; }
+
+  /* GitHub profile */
+  .github-username { font-size: 18px; }
+  .github-stat-val { font-size: 16px; }
+  .github-stat-lbl { font-size: 10px; }
+  .repo-cards-grid { grid-template-columns: 1fr; }
+
+  /* Heatmap */
+  .heatmap-cell { width: 6px; height: 6px; border-radius: 1px; }
+  .heatmap-grid { gap: 2px; }
+  .heatmap-col  { gap: 2px; }
+
+  /* Suitability ring */
+  .suitability-ring-wrap { width: 130px; height: 130px; }
+  .suit-score-num { font-size: 36px; }
+
+  /* Match cards */
+  .match-rank { font-size: 22px; }
+  .match-title { font-size: 15px; }
+  .match-reason { font-size: 11px; }
+
+  /* Roadmap */
+  .phase-label-pill { font-size: 13px; padding: 3px 12px; }
+  .phase-desc { font-size: 12px; }
+  .phase-dot  { width: 36px; height: 36px; font-size: 16px; }
+  .phase-card { padding: 12px; }
+
+  /* Course cards */
+  .course-card-name { font-size: 13px; }
+  .course-filters   { flex-direction: row; overflow-x: auto; }
+
+  /* Prediction role card */
+  .predicted-role-title { font-size: 18px; }
+  .predicted-salary     { font-size: 14px; }
+
+  /* Buttons */
+  .btn-primary, .btn-secondary { padding: 9px 16px; font-size: 12px; }
+  .btn-lg { padding: 10px 18px !important; font-size: 13px !important; }
+
+  /* Topbar */
+  .topbar-icon-btn { width: 32px; height: 32px; font-size: 14px; }
+  .topbar-actions  { gap: 6px; }
+
+  /* Bottom nav */
+  .mob-nav-icon { width: 34px; height: 34px; font-size: 15px; }
+  .mob-nav-label { font-size: 8px; }
+
+  /* Analysis wizard info */
+  .github-input-row { flex-direction: column; gap: 10px; }
+  .github-input-row .btn-primary { width: 100%; }
+
+  /* PPT guide card */
+  .ppt-guide-option { padding: 10px; }
+
+  /* Skills input */
+  .skills-input-row { flex-wrap: wrap; gap: 8px; }
+  .skill-add-input  { min-width: 0; flex: 1; }
+  .topbar-title { max-width: 42vw; font-size: 13px; }
+  .topbar { gap: 6px; }
+  .topbar-actions { gap: 4px; }
+  .section-header { margin-bottom: 18px; }
+  .dashboard-hero-copy, .dashboard-hero-panel,
+  .dashboard-spotlight-card, .dashboard-readiness-card,
+  .dashboard-quick-actions-card { padding: 16px; }
+}
+
+/* ── Safe area support for notched devices ───────────────────── */
+@supports (padding: max(0px)) {
+  .mobile-bottom-nav {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .main-content {
+    padding-left:  env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ── Touch hover states (avoid sticky hovers on mobile) ─────── */
+@media (hover: none) {
+  .glass-card:hover,
+  .career-match-card:hover,
+  .course-card:hover,
+  .repo-card:hover,
+  .phase-card:hover { transform: none; box-shadow: none; }
+
+  .nav-item:active { background: var(--bg-card-hover); }
+  .btn-primary:active { opacity: 0.85; transform: scale(0.98); }
+  .btn-secondary:active { opacity: 0.85; transform: scale(0.98); }
+}
+
+/* ── Landscape mobile fixes ──────────────────────────────────── */
+@media (max-width: 768px) and (orientation: landscape) {
+  .mobile-bottom-nav { display: none; }
+  .main-content { padding-bottom: 0; }
+  .sidebar {
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+  .section-content { padding: 12px 20px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .chart-container { height: 200px !important; }
+}
+
+/* ── Scrollbar responsive ────────────────────────────────────── */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar       { width: 0; height: 0; }
+  .heatmap-grid             { scrollbar-width: none; }
+  .path-tabs                { scrollbar-width: none; }
+  .course-filters           { scrollbar-width: none; }
+}
+
+/* ── Print media ─────────────────────────────────────────────── */
+@media print {
+  .sidebar, .topbar, .mobile-bottom-nav, .btn-primary, .btn-secondary { display: none !important; }
+  .main-content { margin-left: 0; padding: 0; }
+  .section-content { display: block !important; padding: 20px; }
+  .glass-card { background: white; color: black; border: 1px solid #ccc; }
+}

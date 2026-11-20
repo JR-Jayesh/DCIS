@@ -1,0 +1,19 @@
+{
+  "name": "CareerAI — Career Intelligence",
+  "short_name": "CareerAI",
+  "description": "AI-powered career analysis, predictions, roadmaps, and course recommendations.",
+  "start_url": "app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#04060e",
+  "theme_color": "#04060e",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

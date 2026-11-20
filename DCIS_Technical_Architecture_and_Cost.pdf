@@ -1,0 +1,349 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>
+endobj
+4 0 obj
+<< /Length 2733 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (DCIS / CareerAI - Technical Architecture and Cost Explanation) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 710.0 Td (Purpose) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 690.0 Td (This document is an external-facing explanation of the Dynamic Career Intelligence System) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 677.0 Td (\(DCIS\), shown in the interface as CareerAI. It describes the frontend, backend services,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 664.0 Td (database, end-to-end operation, current limitations, and indicative cost.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 647.0 Td (The project is a browser-based career guidance platform. It analyses a student profile and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 634.0 Td (converts the results into career-domain rankings, skill gaps, learning roadmaps, recommended) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 621.0 Td (courses, and progress tools.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 595.0 Td (Executive architecture summary) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 575.0 Td (- Frontend: HTML5, CSS3, and browser JavaScript using a classic-script architecture.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 558.0 Td (- Client-side analysis: resume NLP, GitHub demo analysis, weighted career scoring, roadmap) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 545.0 Td (  generation, and course recommendation run in the browser.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 528.0 Td (- Backend: there is no custom Node.js, Python, or Java server in the current repository.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 515.0 Td (  Firebase is used as an optional managed backend.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 498.0 Td (- Database: Firebase Realtime Database stores authenticated user data under users/{uid};) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 485.0 Td (  localStorage provides the immediate offline cache.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 468.0 Td (- Deployment: the project includes PWA manifest and service-worker assets and can be) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 455.0 Td (  hosted as a static website.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 429.0 Td (Important accuracy note) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 409.0 Td (The current predictor is a weighted rules engine, not a trained machine-learning model. GitHub) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 396.0 Td (analysis currently generates deterministic synthetic profile and repository data and does not) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 383.0 Td (call the live GitHub API. These points should be stated honestly in an external presentation.) Tj ET
+BT 0.42 0.46 0.54 rg /F1 8 Tf 494.0 25.0 Td (Page 1) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Length 5323 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (DCIS End-to-End Data Flow) Tj ET
+BT 0.39 0.43 0.5 rg /F3 9.5 Tf 48.0 717.0 Td (Inputs are analysed in the browser, then results are optionally persisted to Firebase.) Tj ET
+0.93 0.91 0.99 rg 205 650 202 48 re f
+0.35 0.30 0.65 RG 1 w 205 650 202 48 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 680.0 Td (1. User opens app) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 664.0 Td (landing.html -> app.html) Tj ET
+0.25 0.27 0.40 RG 1.2 w 306 650 m 306 625 l S
+0.25 0.27 0.40 rg 302 632 m 306 625 l 310 632 l h f
+0.93 0.91 0.99 rg 205 565 202 60 re f
+0.35 0.30 0.65 RG 1 w 205 565 202 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 607.0 Td (2. Inputs) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 591.0 Td (Resume text/file + GitHub username +) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 581.0 Td (personal form) Tj ET
+0.25 0.27 0.40 RG 1.2 w 306 565 m 306 540 l S
+0.25 0.27 0.40 rg 302 547 m 306 540 l 310 547 l h f
+0.93 0.91 0.99 rg 205 480 202 60 re f
+0.35 0.30 0.65 RG 1 w 205 480 202 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 522.0 Td (3. Resume NLP) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 506.0 Td (Skills, experience, education,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 496.0 Td (projects, certifications) Tj ET
+0.93 0.91 0.99 rg 55 480 125 60 re f
+0.35 0.30 0.65 RG 1 w 55 480 125 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 63.0 522.0 Td (GitHub demo) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 63.0 506.0 Td (Seeded profile, repos,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 63.0 496.0 Td (languages, activity) Tj ET
+0.93 0.91 0.99 rg 437 480 125 60 re f
+0.35 0.30 0.65 RG 1 w 437 480 125 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 445.0 522.0 Td (Local state) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 445.0 506.0 Td (localStorage cache and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 445.0 496.0 Td (saved results) Tj ET
+0.25 0.27 0.40 RG 1.2 w 205 510 m 180 510 l S
+0.25 0.27 0.40 rg 176 503 m 180 510 l 184 503 l h f
+0.25 0.27 0.40 RG 1.2 w 407 510 m 432 510 l S
+0.25 0.27 0.40 rg 428 503 m 432 510 l 436 503 l h f
+0.25 0.27 0.40 RG 1.2 w 306 480 m 306 455 l S
+0.25 0.27 0.40 rg 302 462 m 306 455 l 310 462 l h f
+0.93 0.91 0.99 rg 205 395 202 60 re f
+0.35 0.30 0.65 RG 1 w 205 395 202 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 437.0 Td (4. Feature vector) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 421.0 Td (Skills + experience + projects +) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 411.0 Td (GitHub signals + GPA) Tj ET
+0.25 0.27 0.40 RG 1.2 w 306 395 m 306 370 l S
+0.25 0.27 0.40 rg 302 377 m 306 370 l 310 377 l h f
+0.93 0.91 0.99 rg 205 310 202 60 re f
+0.35 0.30 0.65 RG 1 w 205 310 202 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 352.0 Td (5. Career predictor) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 336.0 Td (Weighted scoring across five career) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 326.0 Td (domains) Tj ET
+0.93 0.91 0.99 rg 55 210 125 60 re f
+0.35 0.30 0.65 RG 1 w 55 210 125 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 63.0 252.0 Td (Skill gap) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 63.0 236.0 Td (Missing role skills) Tj ET
+0.93 0.91 0.99 rg 243 210 125 60 re f
+0.35 0.30 0.65 RG 1 w 243 210 125 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 251.0 252.0 Td (Roadmap) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 251.0 236.0 Td (Phases, projects,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 251.0 226.0 Td (milestones) Tj ET
+0.93 0.91 0.99 rg 431 210 125 60 re f
+0.35 0.30 0.65 RG 1 w 431 210 125 60 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 439.0 252.0 Td (Courses) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 439.0 236.0 Td (Prioritised learning) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 439.0 226.0 Td (resources) Tj ET
+0.25 0.27 0.40 RG 1.2 w 306 310 m 117 270 l S
+0.25 0.27 0.40 rg 113 277 m 117 270 l 121 277 l h f
+0.25 0.27 0.40 RG 1.2 w 306 310 m 306 270 l S
+0.25 0.27 0.40 rg 302 277 m 306 270 l 310 277 l h f
+0.25 0.27 0.40 RG 1.2 w 306 310 m 493 270 l S
+0.25 0.27 0.40 rg 489 277 m 493 270 l 497 277 l h f
+0.25 0.27 0.40 RG 1.2 w 117 210 m 117 175 l S
+0.25 0.27 0.40 rg 113 182 m 117 175 l 121 182 l h f
+0.25 0.27 0.40 RG 1.2 w 306 210 m 306 175 l S
+0.25 0.27 0.40 rg 302 182 m 306 175 l 310 182 l h f
+0.25 0.27 0.40 RG 1.2 w 493 210 m 493 175 l S
+0.25 0.27 0.40 rg 489 182 m 493 175 l 497 182 l h f
+0.93 0.91 0.99 rg 205 105 202 55 re f
+0.35 0.30 0.65 RG 1 w 205 105 202 55 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 142.0 Td (6. Dashboard results) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 126.0 Td (Prediction, roadmap, courses,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 116.0 Td (charts, progress tools) Tj ET
+0.25 0.27 0.40 RG 1.2 w 117 175 m 250 160 l S
+0.25 0.27 0.40 rg 246 167 m 250 160 l 254 167 l h f
+0.25 0.27 0.40 RG 1.2 w 306 175 m 306 160 l S
+0.25 0.27 0.40 rg 302 167 m 306 160 l 310 167 l h f
+0.25 0.27 0.40 RG 1.2 w 493 175 m 362 160 l S
+0.25 0.27 0.40 rg 358 167 m 362 160 l 366 167 l h f
+0.93 0.91 0.99 rg 205 35 202 42 re f
+0.35 0.30 0.65 RG 1 w 205 35 202 42 re S
+BT 0.18 0.14 0.45 rg /F2 9.5 Tf 213.0 59.0 Td (7. Optional cloud save) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 43.0 Td (Firebase Auth + Realtime Database:) Tj ET
+BT 0.1 0.12 0.17 rg /F1 7.4 Tf 213.0 33.0 Td (users/{uid}) Tj ET
+BT 0.45 0.27 0.12 rg /F3 7.8 Tf 48.0 15.0 Td (Note: GitHub analysis is currently synthetic/demo data; Firebase is optional and requires configuration and security rules.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Length 4334 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (1. Frontend, Backend, and Database) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 710.0 Td (Frontend technologies) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 690.0 Td (- HTML5: page structure for landing page, authentication modal, dashboard, forms, analysis) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 677.0 Td (  wizard, roadmap, course cards, charts, timeline, quiz, and navigation.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 660.0 Td (- CSS3: responsive layouts, glass-style cards, gradients, animations, mobile navigation,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 647.0 Td (  dashboard styling, and accessibility-oriented states.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 630.0 Td (- JavaScript: event handling, navigation, validation, state management, data processing,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 617.0 Td (  rendering, local persistence, and coordination of analysis modules.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 600.0 Td (- Chart.js 4.4.3: dashboard and market visualisations.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 583.0 Td (- PDF.js 3.11.174: client-side extraction of text from uploaded PDF resumes.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 566.0 Td (- Firebase Web SDK 10.12.2: browser-side authentication and Realtime Database access.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 549.0 Td (- PWA assets: manifest.webmanifest, service-worker.js, and icon.svg support installability) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 536.0 Td (  and cached app-shell behaviour.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 510.0 Td (Backend services) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 490.0 Td (No separate application server is present in the current project. The browser loads the static) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 477.0 Td (files and executes the analysis locally. When Firebase is configured, Firebase supplies the) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 464.0 Td (managed backend functions needed for identity and persistence:) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 447.0 Td (- Firebase Authentication manages email/password sign-up, sign-in, session restoration,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 434.0 Td (  and user identity.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 417.0 Td (- Firebase Realtime Database stores each signed-in user record at users/{uid} and applies) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 404.0 Td (  owner-specific security rules.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 387.0 Td (If Firebase is not configured or the user is not signed in, the dashboard can still operate) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 374.0 Td (using predefined data and localStorage. Cloud synchronisation is then unavailable.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 348.0 Td (Database usage) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 328.0 Td (1. localStorage - immediate/offline cache) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 310.0 Td (The dashboard stores dci_state containing user skills, timeline items, and career score. AI) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 297.0 Td (results are stored in dci_ai_results. This allows the browser to restore the previous local) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 284.0 Td (session quickly.) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 267.0 Td (2. Firebase Realtime Database - optional cloud persistence) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 249.0 Td (After authentication, dashboard state is saved under users/{uid}/dashboard and AI analysis is) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 236.0 Td (saved under users/{uid}/aiResults. The code also writes a testConnection record to confirm) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 223.0 Td (read/write access. updatedAt is written with a server timestamp.) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 206.0 Td (3. Data security model) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 188.0 Td (The recommended Firebase rules allow a signed-in user to read and write only the record whose) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 175.0 Td (uid matches auth.uid. Firebase configuration in the browser is client metadata; database rules) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 162.0 Td (are the control that protects user records.) Tj ET
+BT 0.42 0.46 0.54 rg /F1 8 Tf 494.0 25.0 Td (Page 3) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Length 4220 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (2. Step-by-Step Working Process) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 710.0 Td (Step 1 - Open the application) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 690.0 Td (The user opens index.html, which redirects to landing.html. The landing page introduces the) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 677.0 Td (platform and provides sign-in/sign-up controls. The dashboard is app.html.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 651.0 Td (Step 2 - Authenticate when cloud storage is needed) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 631.0 Td (Firebase Authentication validates the email and password. On success, the application creates) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 618.0 Td (or updates users/{uid} and redirects to the dashboard. If Firebase is not configured, the) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 605.0 Td (application reports that cloud authentication is unavailable.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 579.0 Td (Step 3 - Enter analysis inputs) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 559.0 Td (- Resume: paste text, load the sample resume, or upload a supported file.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 542.0 Td (- GitHub: enter a username of at least two characters.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 525.0 Td (- Personal form: enter experience, education, project count, interests, and GPA.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 499.0 Td (Step 4 - Parse the resume) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 479.0 Td (NLPParser scans the text with a predefined skill dictionary and regular expressions. It) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 466.0 Td (extracts skills, confidence, categories, experience years, job roles, education, GPA, project) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 453.0 Td (mentions, certifications, section headings, and word count.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 427.0 Td (Step 5 - Analyse GitHub input) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 407.0 Td (GitHubAnalyzer hashes the username and creates repeatable demo metrics: repository count,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 394.0 Td (followers, stars, commits, language mix, topics, repository examples, heatmap, activity score,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 381.0 Td (community score, project-depth score, and overall score.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 355.0 Td (Step 6 - Build the feature vector) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 335.0 Td (MLPredictor combines resume, GitHub, and form values into features such as skill count, skill) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 322.0 Td (diversity, AI/web/security/design/product indicators, experience, education, projects,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 309.0 Td (certifications, GPA, and GitHub scores.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 283.0 Td (Step 7 - Rank career domains) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 263.0 Td (Weighted rules score five domains: Software Engineering, Data Science, Cybersecurity, Product) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 250.0 Td (Management, and UX Design. Scores are normalised, ranked, and accompanied by explanations and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 237.0 Td (confidence labels.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 211.0 Td (Step 8 - Generate next steps) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 191.0 Td (The top-ranked domain and missing skills are passed to RoadmapGenerator and CourseRecommender.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 178.0 Td (The result contains learning phases, skills, projects, certifications, milestones, and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 165.0 Td (prioritised courses.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 139.0 Td (Step 9 - Display and save results) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 119.0 Td (The browser renders prediction, roadmap, course, and skill-gap sections. Results are saved to) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 106.0 Td (localStorage and, when authenticated and configured, synchronised to Firebase Realtime) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 93.0 Td (Database.) Tj ET
+BT 0.42 0.46 0.54 rg /F1 8 Tf 494.0 25.0 Td (Page 4) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Length 5065 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (3. Cost of the Current Project and External Estimate) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 710.0 Td (Current software/infrastructure cost) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 690.0 Td (The current repository has no paid AI API, no paid GitHub API integration, no custom server,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 677.0 Td (and no separate database server. Therefore the project can be demonstrated locally at zero) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 664.0 Td (infrastructure cost, excluding the developer?s time and the user?s existing computer/internet.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 647.0 Td (- Local demonstration: approximately $0 / INR 0 per month for software infrastructure.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 630.0 Td (- Static demo hosting: can be $0 on a free static-hosting tier while usage remains within) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 617.0 Td (  its hard limits.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 600.0 Td (- Firebase Spark/no-cost plan: suitable for a small academic demo within current quotas;) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 587.0 Td (  verify the live pricing page before commercial deployment.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 570.0 Td (- Custom domain: optional and normally billed annually by the registrar; price depends on) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 557.0 Td (  the domain extension and provider.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 540.0 Td (- Production Firebase Blaze plan: usage-based pay-as-you-go; there is no reliable fixed) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 527.0 Td (  monthly price without user, storage, download, and authentication volumes.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 501.0 Td (Indicative external scenarios) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 481.0 Td (Scenario A - Academic/local demo) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 463.0 Td (Cost: $0 monthly infrastructure. Run with a local web server, localStorage, and predefined) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 450.0 Td (data. Firebase can remain disabled.) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 433.0 Td (Scenario B - Small hosted demonstration) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 415.0 Td (Typical planning range: $0-$9/month for hosting and optional personal hosting features, plus) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 402.0 Td (an optional annual domain. Firebase may remain within the no-cost tier for a small number of) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 389.0 Td (users. This is an estimate, not a quotation.) Tj ET
+BT 0.12 0.16 0.25 rg /F2 9.5 Tf 48.0 372.0 Td (Scenario C - Production service) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 354.0 Td (Budget is usage-dependent. Add a managed hosting plan, Firebase pay-as-you-go usage, domain,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 341.0 Td (monitoring, backups, security review, live GitHub API integration, backend services, and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 328.0 Td (possibly a real ML inference service. Obtain a provider quote after expected traffic and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 315.0 Td (data-retention requirements are known.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 289.0 Td (Development effort as a separate cost) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 269.0 Td (Infrastructure cost is not the same as development cost. The current prototype already) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 256.0 Td (contains the main UI and browser analysis workflow. A production-ready version would require) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 243.0 Td (additional engineering for live integrations, backend security, testing, privacy controls,) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 230.0 Td (accessibility, monitoring, and deployment. Any commercial project quote should therefore) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 217.0 Td (separate one-time development effort from recurring cloud usage.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 191.0 Td (Cost assumptions and sources) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 171.0 Td (Firebase pricing reference: https://firebase.google.com/pricing. The official page lists a) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 158.0 Td (Spark no-cost plan and usage-based Blaze pricing; quotas and rates can change.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 141.0 Td (Netlify pricing reference: https://www.netlify.com/pricing/. The official page states that its) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 128.0 Td (Free plan has hard monthly limits and does not incur charges when limits are reached; paid) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 115.0 Td (plan availability and pricing can change.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 98.0 Td (The figures above are planning guidance for explaining the current prototype, not a vendor) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 85.0 Td (quotation or guarantee of future pricing.) Tj ET
+BT 0.42 0.46 0.54 rg /F1 8 Tf 494.0 25.0 Td (Page 5) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Length 3188 >>
+stream
+BT 0.16 0.13 0.55 rg /F2 19 Tf 48.0 744.0 Td (4. External Presentation Summary) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 710.0 Td (Short explanation) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 690.0 Td (DCIS is a web-based career intelligence platform. The frontend collects resume, GitHub, and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 677.0 Td (personal inputs, analyses them in the browser, ranks suitable career domains, identifies) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 664.0 Td (missing skills, and recommends a roadmap and courses. Firebase Authentication and Realtime) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 651.0 Td (Database are optional managed backend services for user accounts and cloud persistence.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 638.0 Td (LocalStorage keeps the application useful offline.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 612.0 Td (What is working) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 592.0 Td (- Responsive landing page and dashboard navigation.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 575.0 Td (- Resume parsing and structured profile extraction.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 558.0 Td (- Deterministic GitHub demonstration analysis.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 541.0 Td (- Rule-based career-domain ranking and predicted role output.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 524.0 Td (- Skill-gap, roadmap, course recommendation, career path, market, timeline, and quiz) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 511.0 Td (  features.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 494.0 Td (- Local persistence and optional Firebase cloud persistence.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 477.0 Td (- PWA manifest and service-worker cache support.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 451.0 Td (What should be described as future enhancement) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 431.0 Td (- Live GitHub API integration.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 414.0 Td (- A trained or hosted machine-learning model instead of weighted rules.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 397.0 Td (- Live labour-market data and real-time salary sources.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 380.0 Td (- A dedicated secure backend for production processing, secrets, audit logging, and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 367.0 Td (  advanced privacy controls.) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 350.0 Td (- Production monitoring, automated tests, backups, and formal security review.) Tj ET
+BT 0.27 0.22 0.65 rg /F2 13 Tf 48.0 324.0 Td (Recommended external message) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 304.0 Td (The current system is a functional academic prototype with a complete browser workflow and) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 291.0 Td (optional cloud persistence. It demonstrates the product concept end to end while keeping) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 278.0 Td (infrastructure costs low. The main production investment would be engineering and live) Tj ET
+BT 0.1 0.12 0.17 rg /F1 9.3 Tf 48.0 265.0 Td (integrations, not the current static frontend itself.) Tj ET
+BT 0.42 0.46 0.54 rg /F1 8 Tf 494.0 25.0 Td (Page 6) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Pages /Kids [11 0 R 12 0 R 13 0 R 14 0 R 15 0 R 16 0 R] /Count 6 >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 4 0 R >>
+endobj
+12 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 5 0 R >>
+endobj
+13 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 6 0 R >>
+endobj
+14 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 7 0 R >>
+endobj
+15 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 8 0 R >>
+endobj
+16 0 obj
+<< /Type /Page /Parent 10 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> /Contents 9 0 R >>
+endobj
+17 0 obj
+<< /Type /Catalog /Pages 10 0 R >>
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000160 00000 n 
+0000000238 00000 n 
+0000003023 00000 n 
+0000008398 00000 n 
+0000012784 00000 n 
+0000017056 00000 n 
+0000022173 00000 n 
+0000025413 00000 n 
+0000025507 00000 n 
+0000025655 00000 n 
+0000025803 00000 n 
+0000025951 00000 n 
+0000026099 00000 n 
+0000026247 00000 n 
+0000026395 00000 n 
+trailer
+<< /Size 18 /Root 17 0 R >>
+startxref
+26446
+%%EOF
