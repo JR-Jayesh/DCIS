@@ -46,6 +46,22 @@ Keep this order: the predictor uses `AIData` and `CareerData`, and the registry 
 
 Keep all files in this folder together and serve the folder through a local web server (for example, VS Code Live Server). Open `index.html` or `landing.html`. Avoid opening `app.html` directly with a `file://` URL if browser modules, PDF.js, Firebase or service-worker behavior is needed.
 
+## Cross-language salary utilities
+
+The project also includes reference implementations of the software-engineering salary estimate:
+
+- `tools/career_salary.ts` — TypeScript
+- `tools/career_salary.py` — Python
+- `tools/CareerSalary.java` — Java
+
+Examples:
+
+```text
+node tools/career_salary.ts 4 1 80
+python tools/career_salary.py --experience 4 --certificates 1 --github-score 80
+java tools/CareerSalary.java 4 1 80
+```
+
 ## Realtime Database persistence
 
 The landing page uses Firebase Email/Password Authentication. After a user signs in, `app.html` loads and saves dashboard state and AI analysis results in the Realtime Database at `users/{uid}`. `localStorage` remains the immediate offline cache.
